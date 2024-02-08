@@ -44,6 +44,7 @@ optional-dependencies.graphviz = [
 ]
 optional-dependencies.test = [
   "covdefaults>=2.3",
+  "coverage_conditional_plugin",
   "diff-cover>=8.0.1",
   "pip>=23.3.1",
   "pytest>=7.4.3",
@@ -99,9 +100,15 @@ html.show_contexts = true
 html.skip_covered = false
 paths.source = ["src", ".tox/*/lib/python*/site-packages", "*/src"]
 run.parallel = true
-run.plugins = ["covdefaults"]
+run.plugins = ["covdefaults", "coverage_conditional_plugin"]
 report.fail_under = 88
 subtract_omit = "*/__main__.py"
+
+[tool.coverage.coverage_conditional_plugin.rules]
+python = "platform_python_implementation == 'CPython'"
+pypy = "platform_python_implementation == 'PyPy'"
+pypy-gte-733 = "platform_python_implementation == 'PyPy' and sys.pypy_version_info >= (7, 3, 3)"
+pypy-lt-733 = "platform_python_implementation == 'PyPy' and sys.pypy_version_info < (7, 3, 3)"
 
 [tool.mypy]
 show_error_codes = true
