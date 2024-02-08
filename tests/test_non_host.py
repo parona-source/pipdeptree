@@ -31,13 +31,13 @@ def test_custom_interpreter(
     out, _ = capfd.readouterr()
     found = {i["package"]["package_name"] for i in json.loads(out)}
     implementation = python_implementation()
-    if implementation == "CPython":
+    if implementation == "CPython":  # pragma: pypy
         expected = {"pip", "setuptools", "wheel"}
-    elif implementation == "PyPy":
+    elif implementation == "PyPy":  # pragma: python
         # hpy added in 7.3.2, enabled in 7.3.3
-        if sys.pypy_version_info >= (7, 3, 3):  # type: ignore[attr-defined]
+        if sys.pypy_version_info >= (7, 3, 3):  # type: ignore[attr-defined] # pragma: pypy-lt-733
             expected = {"cffi", "greenlet", "hpy", "pip", "readline", "setuptools", "wheel"}
-        else:
+        else:  # pragma: pypy-gte-733
             expected = {"cffi", "greenlet", "pip", "readline", "setuptools", "wheel"}
     else:
         raise ValueError(implementation)
